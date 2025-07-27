@@ -1,0 +1,48 @@
+services:
+  # --- PostgreSQL Veritabanı Servisi ---
+  db:
+    image: postgres:13-alpine 
+    volumes:
+      - db_data:/var/lib/postgresql/data 
+    environment: 
+      POSTGRES_DB: yolo_counter_db 
+      POSTGRES_USER: user        
+      POSTGRES_PASSWORD: password 
+    ports:
+      - "5432:5432" 
+    healthcheck: 
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- FastAPI Backend Servisi ---
+  backend:
+    build: ./backend 
+    ports:
+      - "8000:8000" 
+    volumes:
+      - ./backend:/app # Host'taki backend klasörünü /app'e bağla (kod senkronizasyonu için)
+      - backend_yolo_cache:/root/.cache/ultralytics/weights # Named volume'u kullan
+      - ./custom_models:/app/custom_models # Kendi modelleriniz için host klasörünü bağla (bind mount)
+    environment: 
+      DATABASE_URL: postgresql+asyncpg://user:password@db:5432/yolo_counter_db
+    depends_on: 
+      db:
+        condition: service_healthy
+
+  # --- React Frontend Servisi ---
+  frontend:
+    build: ./frontend 
+    ports:
+      - "3000:80" 
+    depends_on:
+      - backend
+
+# --- Docker Volume Tanımları (dosyanın en altındaki GLOBAL bölüm) ---
+# SADECE NAMED VOLUME'LAR BURADA TANIMLANIR.
+volumes:
+  db_data: {} 
+  backend_yolo_cache: {} 
+  processed_videos_output: {}
+  custom_models: {} # Named volume olarak tanımlama (isteğe bağlı, bind mount varsa sadece belirtme amaçlı olabilir)

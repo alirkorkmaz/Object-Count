@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+ultralytics
+opencv-python-headless
+python-multipart
+websockets 
+supervision[video]
+psycopg2-binary
+databases
+asyncpg
+lap>=0.5.12

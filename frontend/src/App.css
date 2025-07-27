@@ -1,0 +1,243 @@
+/* frontend/src/App.css */
+.App {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.controls {
+  margin-bottom: 20px;
+}
+
+.controls label, .controls select, .controls button, .controls input[type="file"] {
+  margin: 0 10px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.controls button {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+.controls button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.video-container {
+  position: relative; 
+  display: inline-block; 
+  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  max-width: 100%; 
+  max-height: 600px; 
+  overflow: hidden; 
+}
+
+.responsive-video {
+  display: block; 
+  width: 100%;
+  height: auto; 
+  max-width: 100%; 
+  max-height: 600px; 
+}
+
+.drawing-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  border: 2px dashed blue; 
+  z-index: 10; 
+  background-color: transparent; 
+  cursor: crosshair; 
+}
+
+.status-area {
+  margin-top: 20px;
+  padding: 15px;
+  border-top: 1px solid #eee;
+  background-color: #f9f9f9;
+}
+
+/* Yeni eklenen stiller */
+.model-selection-type {
+  margin: 15px 0;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+}
+
+.model-selection-type label {
+  margin: 0 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.custom-model-section {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #e9f5ff; /* Açık mavi arka plan */
+}
+
+.model-upload {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #ccc;
+}
+
+.model-upload label, .model-upload input, .model-upload button {
+  margin-right: 10px;
+}
+
+.model-dropdown {
+  margin-top: 15px;
+}
+
+.model-dropdown label, .model-dropdown select {
+  margin: 0 10px;
+}
+
+.class-selection {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  text-align: left;
+}
+
+.class-selection label {
+  display: inline-block;
+  margin-right: 15px;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.class-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.tracker-params {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f0f8ff; /* Açık mavi */
+  text-align: left;
+}
+
+.tracker-params label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.tracker-params input[type="number"] {
+  width: 80px;
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-left: 10px;
+}
+
+.class-selection-buttons {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px; /* Butonlar arasında boşluk */
+  justify-content: center; /* Butonları ortala */
+}
+
+.class-selection-buttons button {
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: 1px solid #007bff;
+  background-color: #e6f2ff; /* Açık mavi */
+  color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.class-selection-buttons button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+
+.class-selection-buttons {
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px; /* Butonlar arasında boşluk */
+  justify-content: center; /* Butonları ortala */
+}
+
+.class-selection-buttons button {
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: 1px solid #007bff;
+  background-color: #e6f2ff; /* Açık mavi */
+  color: #007bff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.class-selection-buttons button:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+
+.last-counts-section {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 2px solid #007bff;
+  background-color: #f0faff; /* Açık mavi */
+  text-align: left;
+}
+
+.last-counts-section h2 {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.last-counts-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.last-counts-section th, .last-counts-section td {
+  border: 1px solid #cceeff; /* Açık mavi kenarlık */
+  padding: 10px;
+  text-align: left;
+}
+
+.last-counts-section th {
+  background-color: #e6f2ff; /* Daha açık mavi başlık */
+  font-weight: bold;
+}
+
+.last-counts-section tr:nth-child(even) {
+  background-color: #f8fcff; /* Hafif daha açık satırlar */
+}
+
+.last-counts-section a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.last-counts-section a:hover {
+  text-decoration: underline;
+}
