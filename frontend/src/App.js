@@ -32,7 +32,8 @@ function App() {
   const [confThreshold, setConfThreshold] = useState(0.25);
   const [iouThreshold, setIouThreshold] = useState(0.7);
   const [trackBufferFrames, setTrackBufferFrames] = useState(30);
-  
+  const [detectionHistory, setDetectionHistory] = useState([]);
+  const [lastCounts, setLastCounts] = useState([]);
 
 
   const fetchModelsAndTrackers = () => {
@@ -52,6 +53,25 @@ function App() {
       })
       .catch(err => console.error("[Frontend Hata] Takipçiler çekilemedi:", err));
   };
+
+  const fetchLastCounts = () => {
+    fetch('http://127.0.0.1:8000/last-10-counts')
+      .then(res => res.json())
+      .then(data => {
+        setLastCounts(data);
+        console.log("[Frontend Debug] Son 10 sayım verisi yüklendi:", data);
+      })
+      .catch(err => {
+        console.error("[Frontend Hata] Son 10 sayım verisi alınamadı:", err);
+      });
+  };
+
+  useEffect(() => {
+    fetchModelsAndTrackers();
+    fetchLastCounts();
+    // diğer WebSocket ayarları...
+  }, []);
+  
 
   // Model değiştiğinde sınıf listesini çek
   useEffect(() => {
@@ -90,6 +110,12 @@ function App() {
       if (data.event === 'object_counted' || data.event === 'general_update' || data.event === 'video_ended') {
         setTotalCount(data.total_count);
         setProcessingStatus(`Toplam Sayım: ${data.total_count} (Son Olay: ${data.event})`);
+        if (data.event === 'object_counted' && data.detail) {
+          setDetectionHistory(prev => {
+            const newHistory = [...prev, data.detail];
+            return newHistory.slice(-10); // Son 10 taneyi tut
+          });
+        }
         if (data.event === 'video_ended' && data.path) {
           alert(`Video işleme tamamlandı ve kaydedildi: ${data.path}. Toplam Sayım: ${data.total_count}`);
           
@@ -108,7 +134,7 @@ function App() {
       setTimeout(() => {
         const newWs = new WebSocket('ws://127.0.0.1:8000/ws/video-count');
         setWebsocket(newWs); 
-      }, 3000);
+      }, 8000);
     };
     ws.onerror = (error) => {
       console.error('WebSocket Hatası:', error);
@@ -181,7 +207,7 @@ function App() {
 
   const handleMouseDown = (e) => {
     if (!videoCanvasRef.current || videoDimensions.width === 0) {
-      console.warn("[handleMouseDown] Canvas veya video boyutları hazır değil, çizim başlatılamıyor.");
+      console.warn("[drawLines] Video ve canvas boyutları henüz yüklenmedi.");
       return; 
     }
     setIsDrawing(true);
@@ -379,7 +405,7 @@ function App() {
   return (
     <div className="App">
       <h1>Object-Count Sistemi</h1>
-
+  
       <div className="controls">
         <input type="file" accept="video/*" onChange={handleFileChange} />
         
@@ -433,7 +459,7 @@ function App() {
         {modelSelectionType === 'custom_uploaded' && (
           <div className="custom-model-section">
             <div className="model-upload">
-              <label>Model Dosyası Seç (.pt):</label>
+              <label>Model Dosyası Seç (Yolov8 +) (.pt):</label>
               <input type="file" accept=".pt" onChange={handleCustomModelFileChange} />
               <button onClick={uploadCustomModel} disabled={!customModelUploadFile}>
                 Modeli Yükle ve Seç
@@ -519,20 +545,20 @@ function App() {
           Videoyu İşle ve Sayımı Başlat
         </button>
       </div>
-
+  
       <div className="video-container">
         {videoUrl && (
           <video
             ref={videoRef}
             src={videoUrl}
-            controls={false} 
+            controls={false}
             autoPlay
-            muted 
+            muted
             loop
             onLoadedMetadata={handleVideoLoadedMetadata}
-            className="responsive-video" 
-            style={{ 
-              pointerEvents: 'none' 
+            className="responsive-video"
+            style={{
+              pointerEvents: 'none'
             }}
           >
             Tarayıcınız video etiketini desteklemiyor.
@@ -544,27 +570,75 @@ function App() {
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp} 
+          onMouseLeave={handleMouseUp}
           style={{
             display: videoDimensions.width > 0 ? 'block' : 'none',
             position: 'absolute',
             top: 0,
             left: 0,
-            width: '100%', 
+            width: '100%',
             height: '100%',
-            border: '2px dashed blue', 
-            zIndex: 10, 
-            cursor: 'crosshair', 
+            border: '2px dashed blue',
+            zIndex: 10,
+            cursor: 'crosshair',
           }}
         ></canvas>
       </div>
-
+  
       <div className="status-area">
         <p>İşlem Durumu: <strong>{processingStatus}</strong></p>
         <p>Canlı Sayım: <strong>{totalCount}</strong></p>
         <p>Çizgi Koordinatları: {JSON.stringify(lineCoordinates)}</p>
       </div>
-    </div>
+  
+      <div className="last-counts-section">
+        <h2>Son 10 Sayım</h2>
+        {Array.isArray(lastCounts) && lastCounts.length === 0 ? (
+          <p>Veri bulunamadı</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Video Adı</th>
+                <th>Model</th>
+                <th>Tracker</th>
+                <th>Sayım</th>
+                <th>Başlangıç</th>
+                <th>Bitiş</th>
+                <th>Video</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lastCounts.map(record => (
+                <tr key={record.id}>
+                  <td>{record.id}</td>
+                  <td>{record.video_name}</td>
+                  <td>{record.model_used}</td>
+                  <td>{record.tracker_used}</td>
+                  <td>{record.final_count}</td>
+                  <td>{record.start_time}</td>
+                  <td>{record.end_time}</td>
+                  <td>
+                    {record.processed_video_path ? (
+                      <a
+                        href={`http://127.0.0.1:8000/processed-videos/${record.processed_video_path.split('/').pop()}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        İzle
+                      </a>
+                    ) : (
+                      "Henüz mevcut değil"
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>  
   );
 }
 

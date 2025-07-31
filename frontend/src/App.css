@@ -241,3 +241,16 @@
 .last-counts-section a:hover {
   text-decoration: underline;
 }
+
+.detection-history {
+  margin-top: 20px;
+  padding: 10px;
+  background: #f4f4f4;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.detection-history ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}

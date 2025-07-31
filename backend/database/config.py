@@ -13,9 +13,7 @@ engine = create_engine(str(DATABASE_URL.replace("+asyncpg", "")), echo=False)
 
 async def create_db_tables():
     print("Veritabanı tabloları oluşturuluyor...")
-    # SQLAlchemy'nin MetaData'sını kullanarak tabloları oluşturun
-    # Bu, henüz alembic gibi bir migration aracı kullanmadığımız için basit bir yoldur.
-    # Üretim ortamında alembic gibi bir migration aracı kullanmak daha iyidir.
+    # SQLAlchemy'nin MetaData'sını kullanarak tabloları oluşturuldu
     Base.metadata.create_all(engine)
     print("Veritabanı tabloları oluşturuldu (veya zaten mevcut).")
 

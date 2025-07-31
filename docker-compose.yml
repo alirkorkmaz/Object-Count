@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   # --- PostgreSQL Veritabanı Servisi ---
   db:
@@ -22,9 +24,9 @@ services:
     ports:
       - "8000:8000" 
     volumes:
-      - ./backend:/app # Host'taki backend klasörünü /app'e bağla (kod senkronizasyonu için)
-      - backend_yolo_cache:/root/.cache/ultralytics/weights # Named volume'u kullan
-      - ./custom_models:/app/custom_models # Kendi modelleriniz için host klasörünü bağla (bind mount)
+      - ./backend:/app
+      - backend_yolo_cache:/root/.cache/ultralytics/weights
+      - ./custom_models:/app/custom_models
     environment: 
       DATABASE_URL: postgresql+asyncpg://user:password@db:5432/yolo_counter_db
     depends_on: 
@@ -38,11 +40,11 @@ services:
       - "3000:80" 
     depends_on:
       - backend
+    restart: always # frontend arayüzü otomatik yeniden başlasın
 
-# --- Docker Volume Tanımları (dosyanın en altındaki GLOBAL bölüm) ---
-# SADECE NAMED VOLUME'LAR BURADA TANIMLANIR.
+# --- Volume Tanımları ---
 volumes:
   db_data: {} 
   backend_yolo_cache: {} 
   processed_videos_output: {}
-  custom_models: {} # Named volume olarak tanımlama (isteğe bağlı, bind mount varsa sadece belirtme amaçlı olabilir)
+  custom_models: {}
