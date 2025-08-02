@@ -51,7 +51,7 @@ Gerçek zamanlı video işleme, nesne tespiti, takip ve sayım yapabilen bir sis
 ### 2. Projeyi Klonla
 
 ```bash
-git clone https://github.com/kullanici_adi/Object-Count.git
+git clone https://github.com/alirkorkmaz/Object-Count.git
 cd Object-Count
 ```
 
