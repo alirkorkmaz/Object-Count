@@ -10,7 +10,7 @@ Gerçek zamanlı video işleme, nesne tespiti, takip ve sayım yapabilen bir sis
 ## 🚀 Özellikler
 
 - ✅ YOLOV5, YOLOv8, YOLOv9, YOLOv10, YOLOv11 gibi modellerle uyumlu
-- ✅ Özel `.pt` model yükleme desteği
+- ✅ Özel YOLOv8 ve üstü `.pt` model yükleme desteği
 - ✅ Class filtreleme (tek tek seç, tümünü seç, tümünü kaldır)
 - ✅ Takip algoritması seçimi (ByteTrack, BoT-SORT)
 - ✅ Çizgi tabanlı geçiş sayımı
@@ -35,8 +35,8 @@ Gerçek zamanlı video işleme, nesne tespiti, takip ve sayım yapabilen bir sis
 │   ├── public/
 │   └── Dockerfile
 │
-├── docker-compose.yml    # Tüm sistemi ayağa kaldırır
-└── README.md             # Bu dosya
+├── docker-compose.yml    
+└── README.md            
 ```
 
 ---
