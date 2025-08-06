@@ -46,7 +46,6 @@ Gerçek zamanlı video işleme, nesne tespiti, takip ve sayım yapabilen bir sis
 ### 1. Gerekli Araçlar
 
 - Docker
-- Docker Compose
 
 ### 2. Projeyi Klonla
 
